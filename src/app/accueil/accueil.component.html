@@ -1,0 +1,210 @@
+<div class="home" *ngIf="affichage==1">
+  <!-- home bg -->
+  <div class="home__bg"></div>
+  <!-- end home bg -->
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="home__content">
+          <h1 class="home__title">MIABE - CAR</h1>
+          <p class="home__text">Bienvenue sur notre plateforme de location de voitures ! <br>Découvrez la solution
+            facile pour reprendre un bail en toute simplicité. <br>Que vous viviez à Lomé, nous avons ce qu'il vous
+            faut. <br>Utilisez notre formulaire de recherche pour trouver les dates de début <br>et de fin de
+            réservation qui vous conviennent. <br>Trouvons ensemble votre prochaine location idéale !</p>
+          <br>
+          <div style="text-align: center;" *ngIf="erreur" class="alert alert-danger">{{ message }}</div>
+          <form class="home__search" [formGroup]="rechercheDateForm">
+            <div class="home__group">
+              <label for="search2">Date réservation</label>
+              <input type="date" name="dateReservation" id="dateReservation" name="dateReservation" formControlName="dateReservation" [(ngModel)]="rechercheDateForm.dateReservation" required>
+              <div class="sign__" [hidden]="dateReservation.valid || dateReservation.pristine && !dateReservation.touched ">Date reservation obligatoire</div>
+            </div>
+            <div class="home__group">
+              <label for="search3">Date retour</label>
+              <input type="date" name="dateRetour" id="dateRetour" name="dateRetour" formControlName="dateRetour" [(ngModel)]="rechercheDateForm.dateRetour" required>
+              <div class="sign__" [hidden]="dateRetour.valid || dateRetour.pristine && !dateRetour.touched ">Date retour obligatoire</div>
+            </div>
+            <button type="submit"  [disabled]="rechercheDateForm.invalid" (click)="onRecherche()"><span>Rechercher</span></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- resultats de recherche -->
+<div class="container" *ngIf="affichage==2">
+    <div class="row">
+      <div class="col-12">
+        <div class="main__title main__title--page">
+          <button class="btn btn-success" (click)="onRetourPrincipale()">Retour</button>
+        </div>
+
+        <div class="main__title main__title--page">
+          <h3>Les Résultats de votre recherche !</h3>
+        </div>
+        <br>
+
+        <form class="sign_form" action="#">
+            <div class="sign__group">
+              <label for="" class="sign_input">Marque</label>
+              <input type="text" class="sign__input" id="marque" [(ngModel)]="marque" name="marque" required placeholder="Rechercher une voiture par marque">
+            </div>
+          <button class="btn btn-primary" type="button" (click)="voitureParMarque()"><span>Rechercher</span></button>
+        </form>
+      </div>
+    </div>
+
+    <!-- voitures -->
+    <div class="row">
+      <div class="col-12 col-md-6 col-xl-4" *ngFor="let voiture of voitures;  let i = index">
+        <div class="car">
+          <div class="car__img">
+            <img src="{{this.APIEndpoint + voiture.imagePrincipal }}" alt="">
+          </div>
+          <div class="car__title">
+            <h3 class="car__name"><a href="car.html">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</a></h3>
+            <span class="car__year">{{ voiture.anneeFabrication }}</span>
+          </div>
+          <ul class="car__list">
+          </ul>
+          <div class="car__footer">
+            <div class="text-sm-end">
+              <button type="button" class="btn btn-info" (click)="onDetails(voiture.id)">Détails</button>
+            </div>
+            <div class="text-sm-end">
+              <button type="button" (click)="reserver(voiture.id)" class="btn btn-warning">Réserver</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h6 *ngIf="voitures.length == 0" class="text-center text-danger">Aucun résutat pour votre recherche !</h6>
+    </div>
+    <!-- end voitures -->
+
+</div>
+
+<!-- resultats recherche par marque -->
+<div class="container" *ngIf="affichage==4">
+  <div class="row">
+    <div class="row">
+      <div class="col-12">
+        <div class="main__title main__title--page">
+          <button class="btn btn-success" (click)="retourRecherche()">Retour</button>
+        </div>
+
+        <div class="main__title main__title--page">
+          <h3>Les Résultats de votre recherche !</h3>
+        </div>
+        <br>
+
+        <form class="sign_form" action="#">
+            <div class="sign__group">
+              <label for="" class="sign_input">Marque</label>
+              <input type="text" class="sign__input" id="marque" [(ngModel)]="marque" name="marque" required placeholder="Rechercher une voiture par marque">
+            </div>
+          <button class="btn btn-primary" type="button" (click)="voitureParMarque()"><span>Rechercher</span></button>
+        </form>
+      </div>
+    </div>
+
+    <!-- voitures par marque -->
+    <div class="row">
+      <div class="col-12 col-md-6 col-xl-4" *ngFor="let voiture of voituresParMarque;  let i = index">
+        <div class="car">
+          <div class="car__img">
+            <img src="{{this.APIEndpoint + voiture.imagePrincipal }}" alt="">
+          </div>
+          <div class="car__title">
+            <h3 class="car__name"><a href="car.html">{{ voiture.modele.marque.nom }} {{ voiture.modele.nom }}</a></h3>
+            <span class="car__year">{{ voiture.anneeFabrication }}</span>
+          </div>
+          <ul class="car__list">
+          </ul>
+          <div class="car__footer">
+            <div class="text-sm-end">
+              <button type="button" class="btn btn-info" (click)="onDetails(voiture.id)">Détails</button>
+            </div>
+            <div class="text-sm-end">
+              <button type="button" (click)="reserver(voiture.id)" class="btn btn-warning">Réserver</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+      <h6 *ngIf="voituresParMarque.length == 0" class="text-center text-danger">Aucun résutat pour votre recherche !</h6>
+    </div>
+    <!-- end voitures par marque -->
+  </div>
+
+</div>
+
+<!-- details voiture  -->
+<main class="main" *ngIf="affichage==3">
+  <div class="container">
+    <section class="row">
+    <!-- breadcrumb -->
+    <div class="col-12">
+      <ul class="breadcrumbs">
+        <li class="breadcrumbs__item"><a href="index.html">Accueil</a></li>
+        <li class="breadcrumbs__item"><a href="cars.html">Voitures disponibles</a></li>
+        <li class="breadcrumbs__item breadcrumbs__item--active">Détails</li>
+      </ul>
+    </div>
+    <!-- end breadcrumb -->
+      <!-- title -->
+      <div class="col-12">
+        <br>
+        <button type="button" class="btn btn-primary btn-rounded" (click)="onRetourVoiture()">Retour</button>
+        <div class="main__title main__title--page">
+          <h1>{{ voiture.modele.nom }} {{ voiture.modele.marque.nom }}</h1>
+        </div>
+      </div>
+
+      <!-- end title -->
+      <!-- details -->
+      <div class="col-10 col-lg-5">
+        <div class="details">
+          <img src="{{this.APIEndpoint + voiture.imagePrincipal }}">
+        </div>
+      </div>
+      <!-- end details -->
+
+      <!-- offer -->
+      <div class="col-12 col-lg-5">
+        <div class="offer">
+          <span class="offer__title">Détails</span>
+          <div class="offer__wrap">
+            <span class="offer__price">{{ voiture.prix }} F CFA<sub> / Jour</sub></span>
+              <button type="button" class="btn btn-success" (click)="reserver(voiture.id)"><span>Réserver</span></button>
+          </div>
+
+          <ul class="offer__list">
+            <li>
+              <span class="offer__list-name">Couleur</span>
+              <span class="offer__list-value">{{ voiture.couleur }}</span>
+            </li>
+            <li>
+              <span class="offer__list-name">Année</span>
+              <span class="offer__list-value">{{ voiture.anneeFabrication }}</span>
+            </li>
+            <li>
+              <span class="offer__list-name">Puissance</span>
+              <span class="offer__list-value">{{ voiture.puissance }} ch</span>
+            </li>
+            <li>
+              <span class="offer__list-name">Téléphone propriétaire</span>
+              <span class="offer__list-value offer__list-value--dark">{{ voiture.proprietaire.telephone }} </span>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+      <!-- end offer -->
+    </section>
+  </div>
+
+
+</main>
+<!-- end main content -->
